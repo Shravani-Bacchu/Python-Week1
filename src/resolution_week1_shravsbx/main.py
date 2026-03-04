@@ -2,15 +2,12 @@ import argparse
 import sys
 import os
 import json
-
 TASKS_FILE = "tasks.json"
-
 def load_tasks():
     if not os.path.exists(TASKS_FILE):
         return []
     with open(TASKS_FILE, "r") as file:
         return json.load(file)
-
 def save_task(tasks):
     with open(TASKS_FILE, "w") as file:
         json.dump(tasks, file, indent=2)
@@ -36,7 +33,7 @@ def main():
         else:
             for task in tasks:
                 status = "X" if task["done"] else " "
-                print(f"[{status}] {task['id']}: {task['task']} {task['due']}")
+                print(f"[{status}] {task['id']}: {task['task']} {task.get('due', 'No due date')}")
         sys.exit(0)
     elif args.update:
         tasks = load_tasks()
@@ -79,7 +76,7 @@ def main():
             new_id = 1
         else:
             new_id = tasks[-1]["id"] + 1
-        tasks.append({"id": new_id, "task": args.task, "done": False, "due-date": "04-05-2026", "priority": args.priority})
+        tasks.append({"id": new_id, "task": args.task, "done": False, "due": "04-05-2026", "priority": args.priority})
         save_task(tasks)
         print(f"Task {args.task} added with ID of {new_id}")
     elif args.priority:
